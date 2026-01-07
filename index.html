@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C3 Health Services (GDA & Nursing Staff at Home, Injections, IV Drips, Surgical Dressing, Catheter Care, Vital Monitoring etc)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom colors and Inter font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1E40AF', // Darker Blue for accents
+                        'secondary-green': '#059669', // Green for positive/health accents
+                        'light-bg': '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Import Inter font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Utility for showing/hiding pages */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link.active-nav {
+            border-bottom: 3px solid #059669;
+            color: #059669;
+            font-weight: 600;
+        }
+        /* Style for the testimonial slider dots */
+        .testimonial-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #BDBDBD;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .testimonial-dot.active-dot {
+            background-color: #1E40AF;
+        }
+    </style>
+</head>
+<body class="bg-light-bg min-h-screen flex flex-col font-sans">
+
+    <!-- Header and Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Brand Name -->
+                <div class="flex-shrink-0">
+                    <span class="text-2xl font-extrabold text-primary-blue">
+                        C3 Health Services <span class="text-secondary-green">Gurgaon</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Contact Info & Navigation -->
+                <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                    <!-- Contact Info (Desktop) -->
+                    <div class="flex items-center space-x-4 text-sm font-medium text-gray-700">
+                        <a href="tel:+919876543210" class="flex items-center hover:text-secondary-green transition duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M6.62 10.79c1.44 2.82 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"></path>
+							</svg>
+                            <span class="font-bold text-primary-blue">+91 9278982994</span>
+                        </a>
+                    </div>
+                    <!-- Navigation -->
+                    <nav class="space-x-8">
+                        <a href="#home" class="nav-link text-gray-700 hover:text-secondary-green transition duration-150 py-2 border-b-2 border-transparent" onclick="showPage('home')">Home</a>
+						<a href="#services" class="nav-link text-gray-700 hover:text-secondary-green transition duration-150 py-2 border-b-2 border-transparent" onclick="showPage('services')">Services</a>
+                        <a href="#about" class="nav-link text-gray-700 hover:text-secondary-green transition duration-150 py-2 border-b-2 border-transparent" onclick="showPage('about')">About Us</a>
+                        <a href="#contact" class="nav-link text-gray-700 hover:text-secondary-green transition duration-150 py-2 border-b-2 border-transparent" onclick="showPage('contact')">Contact Us</a>
+                    </nav>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 text-gray-500 hover:text-primary-blue rounded-lg transition duration-150">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <!-- Mobile Contact Info -->
+            <div class="px-4 py-3 bg-light-bg border-b border-gray-200">
+                <p class="text-sm font-semibold text-gray-800 mb-1">Quick Contact</p>
+                <a href="tel:+919278982994" class="block text-primary-blue font-bold text-lg hover:text-secondary-green transition duration-150">+91 9278982994</a>
+                <a href="mailto:info@c3healthservices.com" class="block text-sm text-gray-600 hover:text-secondary-green transition duration-150">info@c3healthservices.com</a>
+            </div>
+            <div class="pt-2 pb-3 space-y-1 px-4">
+                <a href="#home" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-light-bg hover:text-secondary-green" onclick="showPage('home'); toggleMobileMenu()">Home</a>
+				<a href="#services" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-light-bg hover:text-secondary-green" onclick="showPage('services'); toggleMobileMenu()">Services</a>
+                <a href="#about" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-light-bg hover:text-secondary-green" onclick="showPage('about'); toggleMobileMenu()">About Us</a>
+                <a href="#contact" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-light-bg hover:text-secondary-green" onclick="showPage('contact'); toggleMobileMenu()">Contact Us</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        <!-- --------------------------------- -->
+        <!-- 1. HOME SECTION (Includes Hero, Statistics, Services Summary, V&M, Testimonials, and Quick Contact) -->
+        <!-- --------------------------------- -->
+        <section id="home" class="page-section active bg-white scroll-mt-24">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <!-- HERO CONTENT -->
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- Text Content -->
+                    <div class="order-2 md:order-1">
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+                            Expert Health Services <span class="text-primary-blue">at Your Home</span> in Gurgaon
+                        </h1>
+                        <p class="mt-4 text-xl text-gray-600 mb-8">
+                            Our health services include injections, IV drips, surgical dressing, catheterization, vaccination, vital monitoring along with specialized elderly care and trained staff nurses, GDA, physiotherapists, nutritionists, dietitians, and yoga instructors.
+                        </p>
+						<p class="mt-4 text-xl text-gray-600 mb-8">
+							Please contact us at <b>+91 9278982994</b> to discuss how we can tailor our services to meet your requirements.
+						</p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <button onclick="showPage('contact')" class="bg-primary-blue hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-xl shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                                Book a Consultation Now
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Image -->
+                    <div class="order-1 md:order-2">
+                        <!-- Placeholder for a beautiful AI-generated image of a nurse caring for a patient -->
+						<img src="images/C3_logo.jpeg" 
+                             alt="C3 Health Services" 
+                             class="w-full h-auto object-cover rounded-2xl shadow-2xl"
+                             onerror="this.onerror=null; this.src='https://placehold.co/1200x600/1E40AF/FFFFFF?text=Home+Care+Experts';"
+						>
+                    </div>
+                </div>
+
+                <!-- NEW SECTION: RUNNING NUMBERS (STATISTICS) -->
+                <div class="mt-20 py-8 bg-primary-blue text-white rounded-2xl shadow-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <!-- Patients Served Counter -->
+                            <p class="text-5xl sm:text-6xl font-extrabold mb-1" id="patients-served-counter">0</p>
+                            <p class="text-lg uppercase tracking-wider font-semibold opacity-80">Patients Served</p>
+                        </div>
+                        <div>
+                            <!-- Satisfaction Rate Counter -->
+                            <p class="text-5xl sm:text-6xl font-extrabold mb-1" id="satisfaction-rate-counter">0</p>
+                            <p class="text-lg uppercase tracking-wider font-semibold opacity-80">Satisfaction Rate</p>
+                        </div>
+                        <div>
+                            <!-- Years Experience Counter -->
+                            <p class="text-5xl sm:text-6xl font-extrabold mb-1" id="years-experience-counter">0</p>
+                            <p class="text-lg uppercase tracking-wider font-semibold opacity-80">Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simplified Services Overview on Home Page -->
+                <div class="mt-20 pt-12 border-t border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-10">Our Core Areas of Care</h2>
+                    <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Item 1: Clinical Nursing -->
+                        <div class="flex flex-col items-center text-center p-6 bg-light-bg rounded-xl shadow-md">
+                            <svg class="w-12 h-12 text-primary-blue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 4.016m16.036 0c.287.094.55.209.789.349a12.003 12.003 0 01-16.036 0c.239-.14.502-.255.789-.349m-8.618 4.016a11.955 11.955 0 01-4.016 8.618m4.016-8.618A11.955 11.955 0 0112 21.056a11.955 11.955 0 018.618-4.016m-16.036 0c-.287.094-.55.209-.789.349a12.003 12.003 0 01-16.036 0c-.239-.14-.502-.255-.789-.349"></path></svg>
+                            <h4 class="text-xl font-semibold text-gray-800">Nursing Services at Home</h4>
+                            <p class="text-gray-600 text-sm mt-1">Injections, IV Drips, Cannula, Catheter Care, Surgical Dressings, Vaccination, Vital Monitoring and more.</p>
+                        </div>
+						<!-- Item 3: Staffing -->
+                        <div class="flex flex-col items-center text-center p-6 bg-light-bg rounded-xl shadow-md">
+                            <svg class="w-12 h-12 text-primary-blue mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M3 21h18M3 7h18a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z"></path></svg>
+                            <h4 class="text-xl font-semibold text-gray-800">Trained Nursing and GDA Staff</h4>
+                            <p class="text-gray-600 text-sm mt-1">Provide qualified nursing staff and GDAs, offering reliable healthcare solutions through flexible 12-hour and 24-hour shift coverage.</p>
+                        </div>
+                        <!-- Item 2: Elderly Care -->
+                        <div class="flex flex-col items-center text-center p-6 bg-light-bg rounded-xl shadow-md">
+                            <svg class="w-12 h-12 text-secondary-green mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-3H17M4 17h16M4 7h16M4 12h16m-4 5h-4m-4 0H4"></path></svg>
+                            <h4 class="text-xl font-semibold text-gray-800">Elderly Care Support</h4>
+                            <p class="text-gray-600 text-sm mt-1">Our trained GDAs provide compassionate assistance with daily living activities, specialized mobility support, and meaningful companionship.</p>
+                        </div>
+                    </div>
+                    <div class="mt-12 text-center">
+                        <button onclick="showPage('services')" class="bg-primary-blue hover:bg-blue-800 text-white font-semibold py-3 px-10 rounded-xl shadow-lg transition duration-300 text-lg">
+                            View All Our Services
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- VISION & MISSION BLOCK -->
+                <div class="mt-20 pt-12 border-t border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-10">Our Purpose: Vision & Mission</h2>
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <!-- Vision Card -->
+                        <div class="bg-light-bg p-8 rounded-2xl shadow-xl transform transition duration-300 hover:shadow-2xl border-l-4 border-primary-blue">
+                            <div class="flex items-center mb-4">
+                                <svg class="w-10 h-10 text-primary-blue mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.55 4.55m-7.1 2.85l-4.55-4.55M12 12l.01 0M10 21h4a2 2 0 002-2v-3a2 2 0 00-2-2h-4a2 2 0 00-2 2v3a2 2 0 002 2z"></path></svg>
+                                <h3 class="text-2xl font-bold text-gray-800">Our Vision</h3>
+                            </div>
+                            <p class="text-lg text-gray-600">
+                                To be recognized as the most trusted, compassionate, and technologically advanced home healthcare service provider in the Gurgaon region, setting the standard for professional, personalized patient care outside of a hospital environment.
+                            </p>
+                        </div>
+                        <!-- Mission Card -->
+                        <div class="bg-light-bg p-8 rounded-2xl shadow-xl transform transition duration-300 hover:shadow-2xl border-l-4 border-secondary-green">
+                            <div class="flex items-center mb-4">
+                                <svg class="w-10 h-10 text-secondary-green mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M19 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2z"></path></svg>
+                                <h3 class="text-2xl font-bold text-gray-800">Our Mission</h3>
+                            </div>
+                            <p class="text-lg text-gray-600">
+                                Our mission is to deliver safe and high-quality health care services—from critical procedures like injections, IV drips, surgical dressing to dedicated elderly assistance—directly to our patients, ensuring comfort, faster recovery, and peace of mind.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW SECTION: TESTIMONIALS SLIDER -->
+                <div class="mt-20 py-12 bg-light-bg rounded-2xl shadow-inner">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-10">What Our Clients Say</h2>
+                    
+                    <div class="max-w-4xl mx-auto relative">
+                        <!-- Testimonial Content (Slider) -->
+                        <div id="testimonial-slider" class="overflow-hidden">
+                            <div id="testimonial-container" class="flex transition-transform duration-500 ease-in-out">
+                                
+                                <!-- Testimonial 1 -->
+                                <div class="w-full flex-shrink-0 p-6 text-center">
+                                    <p class="text-xl italic text-gray-700 mb-6">
+                                        "The post-operative care provided by nurse was exceptional. She was professional, punctual, and highly skilled in managing the dressing changes. It made my husband's recovery so much smoother at home."
+                                    </p>
+                                    <p class="font-bold text-lg text-primary-blue">— Mrs. Sangeeta Rao</p>
+                                    <p class="text-sm text-gray-500">Sector 57, Gurgaon</p>
+                                </div>
+                                
+                                <!-- Testimonial 2 -->
+                                <div class="w-full flex-shrink-0 p-6 text-center">
+                                    <p class="text-xl italic text-gray-700 mb-6">
+                                        "We rely on Nursing Services in Gurgaon for 24/7 GDA support for my father. The caregivers are compassionate and treat him with immense respect. Highly recommend their reliable elderly care services."
+                                    </p>
+                                    <p class="font-bold text-lg text-primary-blue">— Mr. Anil Sharma</p>
+                                    <p class="text-sm text-gray-500">DLF Phase 4, Gurgaon</p>
+                                </div>
+
+                                <!-- Testimonial 3 -->
+                                <div class="w-full flex-shrink-0 p-6 text-center">
+                                    <p class="text-xl italic text-gray-700 mb-6">
+                                        "Quick, safe, and convenient! I needed a last-minute injection, and a certified nurse was at my door within an hour. Professional service every time."
+                                    </p>
+                                    <p class="font-bold text-lg text-primary-blue">— Ms. Deepa Singh</p>
+                                    <p class="text-sm text-gray-500">Sushant Lok, Gurgaon</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slider Dots -->
+                        <div id="testimonial-dots" class="flex justify-center space-x-2 mt-4">
+                            <!-- Dots will be generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW SECTION: QUICK CONTACT PANEL (Phone/Email) -->
+                <div class="mt-20 py-12 border-t border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-8">Need Care Now? Contact Us 24/7</h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <!-- Phone Card -->
+                        <div class="p-6 bg-primary-blue text-white rounded-xl shadow-xl text-center flex flex-col items-center justify-center transform hover:scale-[1.02] transition duration-300">
+                            <svg class="w-12 h-12 mb-3 text-secondary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 18.72V20a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                            <p class="text-xl font-semibold mb-2">Emergency & Booking Line</p>
+                            <a href="tel:+919876543210" class="text-4xl font-extrabold tracking-wide hover:underline">+91 9278982994</a>
+                        </div>
+                        
+                        <!-- Email Card -->
+                        <div class="p-6 bg-light-bg text-gray-800 rounded-xl shadow-xl text-center flex flex-col items-center justify-center transform hover:scale-[1.02] transition duration-300 border border-gray-300">
+                            <svg class="w-12 h-12 mb-3 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <p class="text-xl font-semibold mb-2">General Enquiries</p>
+                            <a href="mailto:info@c3healthservices.com" class="text-2xl font-bold text-secondary-green hover:underline">info@c3healthservices.com</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- --------------------------------- -->
+        <!-- 2. ABOUT US SECTION -->
+        <!-- --------------------------------- -->
+        <section id="about" class="page-section bg-light-bg py-12 scroll-mt-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-10">About C3 Health Services in Gurgaon</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- Image -->
+                    <div>
+                        <!-- Placeholder for a beautiful AI-generated image of a professional team -->
+                        <img src="images/nursing_services_at_home_in_gurgaon.png" 
+                             alt="Professional team of nurses, representing experienced staff." 
+                             class="w-full h-auto object-cover rounded-2xl shadow-xl"
+                             onerror="this.onerror=null; this.src='https://placehold.co/800x600/3B82F6/FFFFFF?text=Experienced+Caregivers';"
+                        >
+                    </div>
+                    <!-- Text Content -->
+                    <div>
+                        <p class="mt-4 text-lg text-gray-600 space-y-6">
+                            <span class="block">
+                                C3 Health Services in Gurgaon is your trusted partner for in-home medical and elderly assistance. We provide a wide range of services including injections at home, IV drips, surgical dressing, catheterization, vaccination, vital monitoring, and other clinical procedures—all delivered with compassion and expertise.
+                            </span>
+                            <span class="block">
+                                Our team comprises highly qualified Nurses, General Duty Assistants (GDAs), Physiotherapist, Nutritionist, Dietitian and Yoga Instructors. Every caregiver is dedicated to maintaining the highest standards of safety, hygiene, and compassionate interaction.
+                            </span>
+                            <span class="block font-semibold text-primary-blue">
+                                Your health and comfort are our top priority. We offer personalized care plans tailored to the specific needs of each individual client, ensuring dignity and respect are maintained at all times.
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------- -->
+        <!-- 3. SERVICES SECTION -->
+        <!-- --------------------------------- -->
+        <section id="services" class="page-section bg-white py-12 scroll-mt-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-4">Our Comprehensive Home Care Services</h2>
+                <p class="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+                    We provide a complete range of medical and support services, delivered by certified professionals, ensuring you receive the highest standard of care in your own home.
+                </p>
+
+                <!-- DETAILED 6-CARD GRID (Moved from Home) -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Feature 1: Clinical Procedures -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+                        <svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 4.016m16.036 0c.287.094.55.209.789.349a12.003 12.003 0 01-16.036 0c.239-.14.502-.255.789-.349m-8.618 4.016a11.955 11.955 0 01-4.016 8.618m4.016-8.618A11.955 11.955 0 0112 21.056a11.955 11.955 0 018.618-4.016m-16.036 0c-.287.094-.55.209-.789.349a12.003 12.003 0 01-16.036 0c-.239-.14-.502-.255-.789-.349"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">Injections, Infusions & Fluids</h4>
+                            <p class="text-gray-600 text-sm mt-1">IV, IM, SC injections, Infusions, and IV Fluids administered safely by certified nurses.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature 2: Wound & Catheter Care -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-primary-blue">
+                        <svg class="w-8 h-8 text-primary-blue mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">Dressing, Catheter & Cannula</h4>
+                            <p class="text-gray-600 text-sm mt-1">Aseptic Surgical Dressing, Urinary Catheter, and Cannula Insertion services.</p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3: Staffing & Elderly Care -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+                        <svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-3H17M4 17h16M4 7h16M4 12h16m-4 5h-4m-4 0H4"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">Elderly Care & Staffing</h4>
+                            <p class="text-gray-600 text-sm mt-1">Dedicated GDA, Nursing Staff at home, and comprehensive Elderly Care services.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature 4: Vaccination at Home -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-primary-blue">
+                         <svg class="w-8 h-8 text-primary-blue mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">Vaccination at Home</h4>
+                            <p class="text-gray-600 text-sm mt-1">Convenient administration of required vaccinations by qualified medical staff.</p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 5: Post-Operative Care -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+                        <svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">Post-Operative Care</h4>
+                            <p class="text-gray-600 text-sm mt-1">Skilled nursing support for monitoring, recovery, and post-surgery management.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature 6: Full-Time Nursing -->
+                    <div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-primary-blue">
+                        <svg class="w-8 h-8 text-primary-blue mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4v.01M3 21h18M3 7h18a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2z"></path></svg>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-800">24/7 Dedicated Nursing</h4>
+                            <p class="text-gray-600 text-sm mt-1">Round-the-clock professional nursing staff available for shift-based or full-time support.</p>
+                        </div>
+                    </div>
+					
+					<div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+						<svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+						</svg>
+						<div class="ml-4">
+							<h4 class="text-xl font-semibold text-gray-800">Professional Physiotherapy</h4>
+							<p class="text-gray-600 text-sm mt-1">Personalized rehabilitation focusing on pain management, mobility restoration, and post-surgical recovery programs.</p>
+						</div>
+					</div>
+					
+					<div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+						<svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+						</svg>
+						<div class="ml-4">
+							<h4 class="text-xl font-semibold text-gray-800">Nutrition & Dietetics</h4>
+							<p class="text-gray-600 text-sm mt-1">Personalized meal planning to manage health conditions, boost immunity, and optimize metabolic health.</p>
+						</div>
+					</div>
+					
+					<div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
+						<svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+						</svg>
+						<div class="ml-4">
+							<h4 class="text-xl font-semibold text-gray-800">Holistic Yoga Training</h4>
+							<p class="text-gray-600 text-sm mt-1">Yoga sessions focusing on flexibility, stress reduction, and mental well-being through specialized techniques.</p>
+						</div>
+					</div>
+					
+                </div>
+
+                <!-- CTA block at the bottom of the services page -->
+                <div class="mt-16 text-center p-10 bg-light-bg rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Don't see what you're looking for?</h3>
+                    <p class="text-lg text-gray-600 mb-6 max-w-xl mx-auto">
+                        Our services are highly customized. Please contact us to discuss your specific medical or elderly care needs, and we will create a personalized plan for you.
+                    </p>
+                    <button onclick="showPage('contact')" class="bg-primary-blue hover:bg-blue-800 text-white font-semibold py-3 px-10 rounded-xl shadow-lg transition duration-300 text-lg">
+                        Request a Call Back
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- --------------------------------- -->
+        <!-- 4. CONTACT US SECTION -->
+        <!-- --------------------------------- -->
+        <section id="contact" class="page-section bg-white py-12 scroll-mt-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-10">Get in Touch - Book Your Home Care</h2>
+                
+                <div class="grid md:grid-cols-2 gap-12">
+                    
+                    <!-- Contact Information -->
+                    <div class="p-6 bg-light-bg rounded-2xl shadow-xl">
+                        <h3 class="text-2xl font-bold text-primary-blue mb-6">Contact Details</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-secondary-green mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 18.72V20a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Call Us Today</p>
+                                    <p class="text-lg text-primary-blue">+91 9278982994</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-secondary-green mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Email for Inquiries</p>
+                                    <p class="text-lg text-primary-blue">info@c3healthservices.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-secondary-green mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Our Address (Gurgaon)</p>
+                                    <p class="text-lg text-gray-700">Sector 37C, Gurgaon (Gurugram), Haryana 122006, India</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="p-6 bg-light-bg rounded-2xl shadow-xl">
+                        <h3 class="text-2xl font-bold text-primary-blue mb-6">Request a Call Back</h3>
+                        <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-blue focus:border-primary-blue">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number (Required)</label>
+                                <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-blue focus:border-primary-blue">
+                            </div>
+                            <div>
+                                <label for="service" class="block text-sm font-medium text-gray-700">Service Needed</label>
+                                <select id="service" name="service" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-blue focus:border-primary-blue">
+                                    <option value="">Select a service...</option>
+                                    <option value="Clinical">Injection/Drip/Dressing/Catheter/Vaccination</option>
+                                    <option value="GDA">GDA & Nursing Staff</option>
+									<option value="Elderly Care">Elderly Care Services</option>
+									<option value="Post-Operative">Physiotherapist</option>
+                                    <option value="Catheter">Nutritionist/Dietitian</option>
+                                    <option value="Post-Operative">Yoga Trainer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700">Message / Brief Description</label>
+                                <textarea id="message" name="message" rows="3" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-primary-blue focus:border-primary-blue"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary-blue hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition duration-300">
+                                Send Request
+                            </button>
+                            <div id="status-message" class="mt-4 text-center hidden p-3 rounded-lg bg-green-100 text-secondary-green font-semibold"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Custom Modal for Confirmation/Alerts -->
+        <div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden z-50 transition-opacity duration-300 items-center justify-center">
+            <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-sm m-4 transform transition-transform duration-300 scale-95">
+                <h3 id="modal-title" class="text-xl font-bold text-primary-blue mb-4">Success!</h3>
+                <p id="modal-body" class="text-gray-700 mb-6">Your message has been successfully sent. We will contact you shortly!</p>
+                <button onclick="closeModal()" class="w-full bg-secondary-green hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition duration-300">Close</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-semibold mb-2">C3 Health Services in Gurgaon</p>
+            
+            <!-- Contact details added to the footer -->
+            <div class="mb-4 space-y-1">
+                <a href="tel:+919876543210" class="flex items-center justify-center text-secondary-green hover:text-green-400 transition duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 18.72V20a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                    +91 9278982994 (24/7 Support)
+                </a>
+                <a href="mailto:info@c3healthservices.com" class="flex items-center justify-center text-gray-300 hover:text-white transition duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    info@c3healthservices.com
+                </a>
+            </div>
+
+            <p class="text-sm text-gray-400">© 2026 All rights reserved. Providing compassionate health and elderly care services in Gurgaon.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- GLOBALS ---
+        const pages = ['home', 'about', 'services', 'contact'];
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const customModal = document.getElementById('custom-modal');
+
+        // --- COUNTER LOGIC (Updated to support suffix) ---
+        /**
+         * Animates a number counter to a specified end value with an optional suffix.
+         * @param {string} elementId - The ID of the element to update.
+         * @param {number} start - The starting number.
+         * @param {number} end - The ending number.
+         * @param {number} duration - The duration in milliseconds.
+         * @param {string} [suffix=''] - An optional suffix (e.g., '%', '+').
+         */
+        function animateCounter(elementId, start, end, duration, suffix = '') {
+            const obj = document.getElementById(elementId);
+            if (!obj) return;
+            let current = start;
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+
+            const timer = setInterval(() => {
+                current += increment;
+                obj.textContent = current;
+                if (current == end) {
+                    clearInterval(timer);
+                    // Apply suffix only when the counter reaches the end
+                    obj.textContent = current + suffix; 
+                }
+            }, stepTime);
+        }
+
+        // --- TESTIMONIAL SLIDER LOGIC ---
+        let currentTestimonial = 0;
+        const testimonials = [
+            { text: "The post-operative care provided by Nurse Riya was exceptional. She was professional, punctual, and highly skilled in managing the dressing changes. It made my husband's recovery so much smoother at home.", name: "Mrs. Sangeeta Rao", location: "Sector 57, Gurgaon" },
+            { text: "We rely on Nursing Services in Gurgaon for 24/7 GDA support for my father. The caregivers are compassionate and treat him with immense respect. Highly recommend their reliable elderly care services.", name: "Mr. Anil Sharma", location: "DLF Phase 4, Gurgaon" },
+            { text: "Quick, safe, and convenient! I needed a last-minute injection, and a certified nurse was at my door within an hour. Professional service every time.", name: "Ms. Deepa Singh", location: "Sushant Lok, Gurgaon" }
+        ];
+
+        function initializeTestimonials() {
+            const container = document.getElementById('testimonial-container');
+            const dotsContainer = document.getElementById('testimonial-dots');
+            
+            // Generate dots
+            testimonials.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('testimonial-dot');
+                dot.onclick = () => showTestimonial(index);
+                dotsContainer.appendChild(dot);
+            });
+            
+            showTestimonial(0); // Show the first testimonial
+        }
+
+        function showTestimonial(index) {
+            const container = document.getElementById('testimonial-container');
+            const dotElements = document.querySelectorAll('.testimonial-dot');
+            // Ensure the container has testimonials loaded before calculating width
+            if (testimonials.length === 0) return;
+            
+            // Note: Since the content is generated statically in HTML, the container width is calculated
+            // based on the wrapper size in this simple implementation.
+            const totalWidth = container.offsetWidth; 
+            
+            // Update container position
+            container.style.transform = `translateX(-${index * totalWidth}px)`;
+            currentTestimonial = index;
+            
+            // Update dots
+            dotElements.forEach((dot, i) => {
+                dot.classList.remove('active-dot');
+                if (i === index) {
+                    dot.classList.add('active-dot');
+                }
+            });
+        }
+
+        function nextTestimonial() {
+            const nextIndex = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(nextIndex);
+        }
+
+        // Auto-advance testimonials every 5 seconds
+        setInterval(nextTestimonial, 5000);
+
+
+        // --- PAGE NAVIGATION LOGIC ---
+        
+        /**
+         * Shows the requested page section and updates the navigation links.
+         * @param {string} pageId - The ID of the section to show.
+         */
+        function showPage(pageId) {
+            // 1. Hide all pages
+            pages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('active');
+                }
+            });
+
+            // 2. Show the target page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // 3. Update active nav link styling
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav');
+                if (link.getAttribute('href') === `#${pageId}`) {
+                    link.classList.add('active-nav');
+                }
+            });
+
+            // 4. Update the URL hash
+            history.pushState(null, '', `#${pageId}`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // 5. Run counter animations when home page is shown
+            if (pageId === 'home') {
+                // Restart counter animations when home is viewed
+                animateCounter('patients-served-counter', 0, 500, 600, '+');
+                animateCounter('satisfaction-rate-counter', 0, 99, 1500, '%');
+                animateCounter('years-experience-counter', 0, 5, 2000, '+');
+            }
+        }
+
+        /**
+         * Handles initial page load based on URL hash or defaults to 'home'.
+         */
+        function initialLoad() {
+            const hash = window.location.hash.replace('#', '');
+            const initialPage = pages.includes(hash) ? hash : 'home';
+            showPage(initialPage);
+            initializeTestimonials(); // Initialize the slider and dots
+        }
+
+        // --- MOBILE MENU LOGIC ---
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+        document.getElementById('mobile-menu-button').addEventListener('click', toggleMobileMenu);
+
+        // --- CONTACT FORM LOGIC (Simulated) ---
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const phone = form.elements['phone'].value;
+            
+            if (!phone) {
+                showModal("Error", "Please provide a valid phone number so we can contact you.", "bg-red-100 text-red-700");
+                return;
+            }
+
+            setTimeout(() => {
+                showModal("Request Sent!", "Thank you for your inquiry! A member of our team will call you at " + phone + " shortly to discuss your home care needs.", "bg-green-100 text-secondary-green");
+                form.reset();
+            }, 500); 
+        }
+
+        // --- CUSTOM MODAL LOGIC (replacing alert()) ---
+        function showModal(title, body, colorClass) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = body;
+            
+            const modalButton = customModal.querySelector('button');
+            if (colorClass && colorClass.includes('red')) {
+                 modalButton.classList.remove('bg-secondary-green', 'hover:bg-green-700');
+                 modalButton.classList.add('bg-primary-blue', 'hover:bg-blue-800');
+            } else {
+                 modalButton.classList.remove('bg-primary-blue', 'hover:bg-blue-800');
+                 modalButton.classList.add('bg-secondary-green', 'hover:bg-green-700');
+            }
+
+            customModal.classList.remove('hidden', 'opacity-0');
+            customModal.classList.add('flex', 'opacity-100');
+        }
+
+        function closeModal() {
+            customModal.classList.remove('flex', 'opacity-100');
+            customModal.classList.add('hidden', 'opacity-0');
+        }
+
+        // Run initial load
+        window.addEventListener('load', initialLoad);
+    </script>
+</body>
+</html>
