@@ -153,7 +153,7 @@
                 </div>
 
                 <!-- NEW SECTION: RUNNING NUMBERS (STATISTICS) -->
-                <div class="mt-20 py-8 bg-primary-blue text-white rounded-2xl shadow-xl">
+                <div id="counter-stats-container" class="mt-20 py-8 bg-primary-blue text-white rounded-2xl shadow-xl">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div>
                             <!-- Patients Served Counter -->
@@ -411,8 +411,8 @@
 						</div>
 					</div>
 					
-					<div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-secondary-green">
-						<svg class="w-8 h-8 text-secondary-green mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<div class="flex items-start p-6 bg-light-bg rounded-xl shadow-md border-l-4 border-primary-blue">
+						<svg class="w-8 h-8 text-primary-blue mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
 						</svg>
 						<div class="ml-4">
@@ -573,24 +573,6 @@
          * @param {number} duration - The duration in milliseconds.
          * @param {string} [suffix=''] - An optional suffix (e.g., '%', '+').
          */
-        function animateCounter(elementId, start, end, duration, suffix = '') {
-            const obj = document.getElementById(elementId);
-            if (!obj) return;
-            let current = start;
-            const range = end - start;
-            const increment = end > start ? 1 : -1;
-            const stepTime = Math.abs(Math.floor(duration / range));
-
-            const timer = setInterval(() => {
-                current += increment;
-                obj.textContent = current;
-                if (current == end) {
-                    clearInterval(timer);
-                    // Apply suffix only when the counter reaches the end
-                    obj.textContent = current + suffix; 
-                }
-            }, stepTime);
-        }
 
         // --- TESTIMONIAL SLIDER LOGIC ---
         let currentTestimonial = 0;
@@ -679,15 +661,57 @@
             // 4. Update the URL hash
             history.pushState(null, '', `#${pageId}`);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // 5. Run counter animations when home page is shown
-            if (pageId === 'home') {
-                // Restart counter animations when home is viewed
-                animateCounter('patients-served-counter', 0, 500, 600, '+');
-                animateCounter('satisfaction-rate-counter', 0, 99, 1500, '%');
-                animateCounter('years-experience-counter', 0, 5, 2000, '+');
-            }
         }
+		
+		/**
+		 * Function to animate the numbers
+		 */
+		function animateCounter(id, start, end, duration, suffix = '') {
+			const obj = document.getElementById(id);
+			
+			// Safety Condition: Ensure the element exists and is visible (not display: none)
+			if (!obj || obj.offsetParent === null) return;
+
+			let startTimestamp = null;
+			const step = (timestamp) => {
+				if (!startTimestamp) startTimestamp = timestamp;
+				const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+				obj.innerText = Math.floor(progress * (end - start) + start) + suffix;
+				if (progress < 1) {
+					window.requestAnimationFrame(step);
+				}
+			};
+			window.requestAnimationFrame(step);
+		}
+
+		/**
+		 * Setup Intersection Observer to trigger when visible
+		 */
+		const observerOptions = {
+			root: null, // Watch the browser viewport
+			threshold: 0.3 // Trigger when 30% of the div is visible
+		};
+
+		const counterObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				// If the div enters the screen
+				if (entry.isIntersecting) {
+					// Run all animations
+					animateCounter('patients-served-counter', 0, 500, 3000, '+');
+					animateCounter('satisfaction-rate-counter', 0, 99, 3000, '%');
+					animateCounter('years-experience-counter', 0, 5, 3000, '+');
+
+					// Stop watching after it runs once
+					observer.unobserve(entry.target);
+				}
+			});
+		}, observerOptions);
+
+		// Start watching the container
+		const targetDiv = document.getElementById('counter-stats-container');
+		if (targetDiv) {
+			counterObserver.observe(targetDiv);
+		}
 
         /**
          * Handles initial page load based on URL hash or defaults to 'home'.
